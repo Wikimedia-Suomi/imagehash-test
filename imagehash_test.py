@@ -132,7 +132,7 @@ def precompute_coeffs(inSize, in0, in1, outSize, filterp):
                 kk[offset + x] /= ww
 
         # Remaining values should stay as zero if they are used despite of xmax
-        for i in range(x, ksize):
+        for i in range(xmax, ksize):
             kk[offset + i] = 0
 
         bounds[xx * 2] = xmin
@@ -140,72 +140,6 @@ def precompute_coeffs(inSize, in0, in1, outSize, filterp):
 
 
     print(f'precompute_coeffs: {ksize}\n{bounds}\n{kk}')
-    return ksize, bounds, kk
-
-def precompute_coeffs_old(in_size, in0, in1, out_size, filterp):
-    """
-    Precompute the coefficients for resampling.
-    
-    Parameters:
-    - in_size: int, size of the input dimension
-    - in0: float, start of the input range
-    - in1: float, end of the input range
-    - out_size: int, size of the output dimension
-    - filterp: dict, containing 'filter' function and 'support' value
-
-    Returns:
-    - ksize: int, number of coefficients per output pixel
-    - bounds: numpy array (1D), the bounds for each output pixel
-    - kk: numpy array (1D), the precomputed coefficients
-    """
-    # Prepare for horizontal stretch
-    print(f'IN: {in1}\t{in0}\t{out_size}')
-
-    scale = (in1 - in0) / out_size
-    filterscale = max(1.0, scale)
-    
-    # Determine support size (length of resampling filter)
-    support = filterp['support'] * filterscale
-    print(filterp['support'])
-    print(filterscale)
-    
-    # Maximum number of coefficients
-    ksize = int(math.ceil(support) * 2 + 1)
-
-    print(f'{in_size}\t{in0}\t{in1}\t{out_size}\t{support}\t{ksize}\n')
-    
-    # Initialize coefficient buffer and bounds
-    kk = np.zeros(out_size * ksize, dtype=np.float64)
-    bounds = np.zeros(out_size * 2, dtype=np.int32)
-
-    for xx in range(out_size):
-        center = in0 + (xx + 0.5) * scale
-        ww = 0.0
-        ss = 1.0 / filterscale
-        
-        # Calculate xmin and xmax
-        xmin = max(int(center - support + 0.5), 0)
-        xmax = min(int(center + support + 0.5), in_size)
-        xmax -= xmin
-        
-        # Compute weights for the current output pixel
-        offset = xx * ksize
-        for x in range(xmax):
-            w = filterp['filter']((x + xmin - center + 0.5) * ss)
-            kk[offset + x] = w
-            ww += w
-        
-        # Normalize the weights
-        if ww != 0.0:
-            kk[offset:offset + xmax] /= ww
-        
-        # Fill the remaining coefficients with zeros if not used
-        kk[offset + xmax:offset + ksize] = 0
-        
-        # Store the bounds in 1D array
-        bounds[xx * 2] = xmin
-        bounds[xx * 2 + 1] = xmax
-    
     return ksize, bounds, kk
 
 
