@@ -2,13 +2,15 @@
 
 This is development repository for implementing Pillows resample.c lanczos algorithm for grayscale images so that it can be ported to other programming languages. Final target is to get identical results from imagehash.py:s phash in different platforms/programming languages (Java/PHP).
 
-== References ==
+**References**
+
 * https://github.com/python-pillow/Pillow/blob/95cff6e959bb3c37848158ed2145d49d49806a31/src/libImaging/Resample.c
 * https://github.com/JohannesBuchner/imagehash/tree/master
 * https://github.com/simon987/fastimagehash
 * https://www.reddit.com/r/learnpython/comments/uggbw1/pil_image_resize_lanczos_algorithm_i_need_to/
 
-== Pillows licence ==
+**Pillows licence**
+
 The Python Imaging Library (PIL) is
 
     Copyright © 1997-2011 by Secret Labs AB
